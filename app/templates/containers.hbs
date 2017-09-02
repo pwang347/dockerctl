@@ -1,0 +1,5 @@
+ {{#each model as |container|}}
+<p>{{container.Image}} {{container.Names}}</p>
+{{/each}}
+<p>Listed {{model.length}} container(s).</p>
+{{outlet}}

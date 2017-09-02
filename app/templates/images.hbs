@@ -1,0 +1,5 @@
+ {{#each model as |image|}}
+<p>{{image.RepoTags}}</p>
+{{/each}}
+<p>Listed {{model.length}} image(s).</p>
+{{outlet}}

@@ -1,16 +1,19 @@
 /* eslint-env node */
-const { app, BrowserWindow, protocol } = require('electron');
-const { dirname, join, resolve } = require('path');
-const protocolServe = require('electron-protocol-serve');
+const { app, BrowserWindow, protocol } = require("electron");
+const { dirname, join, resolve } = require("path");
+const protocolServe = require("electron-protocol-serve");
+
+// Serve the Docker backend API
+const dockerServer = require("./docker-server");
 
 let mainWindow = null;
 
 // Registering a protocol & schema to serve our Ember application
-protocol.registerStandardSchemes(['serve'], { secure: true });
+protocol.registerStandardSchemes(["serve"], { secure: true });
 protocolServe({
-  cwd: join(__dirname || resolve(dirname('')), '..', 'ember'),
+  cwd: join(__dirname || resolve(dirname("")), "..", "ember"),
   app,
-  protocol,
+  protocol
 });
 
 // Uncomment the lines below to enable Electron's crash reporter
@@ -22,46 +25,52 @@ protocolServe({
 //     autoSubmit: true
 // });
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('ready', () => {
+app.on("ready", () => {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    minHeight: 800,
+    minWidth: 1280
   });
 
   // If you want to open up dev tools programmatically, call
   // mainWindow.openDevTools();
 
-  const emberAppLocation = 'serve://dist';
+  const emberAppLocation = "serve://dist";
 
   // Load the ember application using our custom protocol/scheme
   mainWindow.loadURL(emberAppLocation);
 
   // If a loading operation goes wrong, we'll send Electron back to
   // Ember App entry point
-  mainWindow.webContents.on('did-fail-load', () => {
+  mainWindow.webContents.on("did-fail-load", () => {
     mainWindow.loadURL(emberAppLocation);
   });
 
-  mainWindow.webContents.on('crashed', () => {
-    console.log('Your Ember app (or other code) in the main window has crashed.');
-    console.log('This is a serious issue that needs to be handled and/or debugged.');
+  mainWindow.webContents.on("crashed", () => {
+    console.log(
+      "Your Ember app (or other code) in the main window has crashed."
+    );
+    console.log(
+      "This is a serious issue that needs to be handled and/or debugged."
+    );
   });
 
-  mainWindow.on('unresponsive', () => {
-    console.log('Your Ember app (or other code) has made the window unresponsive.');
+  mainWindow.on("unresponsive", () => {
+    console.log(
+      "Your Ember app (or other code) has made the window unresponsive."
+    );
   });
 
-  mainWindow.on('responsive', () => {
-    console.log('The main window has become responsive again.');
+  mainWindow.on("responsive", () => {
+    console.log("The main window has become responsive again.");
   });
 
-  mainWindow.on('closed', () => {
+  mainWindow.on("closed", () => {
     mainWindow = null;
   });
 });
@@ -81,8 +90,10 @@ app.on('ready', () => {
 // The correct use of 'uncaughtException' is to perform synchronous cleanup of allocated
 // resources (e.g. file descriptors, handles, etc) before shutting down the process. It is
 // not safe to resume normal operation after 'uncaughtException'.
-process.on('uncaughtException', (err) => {
-  console.log('An exception in the main thread was not handled.');
-  console.log('This is a serious issue that needs to be handled and/or debugged.');
+process.on("uncaughtException", err => {
+  console.log("An exception in the main thread was not handled.");
+  console.log(
+    "This is a serious issue that needs to be handled and/or debugged."
+  );
   console.log(`Exception: ${err}`);
 });

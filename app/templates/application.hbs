@@ -1,2 +1,13 @@
-<p>Hi</p>
+<div>
+    {{#mdl-nav title='Dockerctl' includeHeader=false fixedDrawer=true}} {{mdl-nav-item name='Home' route='home'}} {{mdl-nav-item
+    name='Containers' route='containers'}} {{mdl-nav-item name='Images' route='images'}} {{mdl-nav-item name='Orchestrations'
+    route='orchestrations'}} {{mdl-nav-item name='Builds' route='builds'}}
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col">
+            {{outlet}}
+        </div>
+    </div>
+    {{/mdl-nav}}
+</div>
+
 {{outlet}}
