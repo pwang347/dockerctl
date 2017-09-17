@@ -36,22 +36,65 @@
     next();
   });
 
-  // API endpoints
+  // Dynamic API endpoints
   //
-  // List all running containers
-  app.get("/api/v1/containers", (req, res) =>
-    docker.listContainers(function(err, containers) {
-      res.json(containers);
-    })
-  );
-  // List all available images
-  app.get("/api/v1/images", (req, res) =>
-    docker.listImages(function(err, images) {
-      res.json(images);
-    })
-  );
-  app.post("/api/v1/", function(req, res) {});
-
+  let dockerFns = ["listContainers", "createContainer", "listImages"];
+  for (let fn of dockerFns) {
+    app.post(`/api/v1/${fn}`, (req, res) => {
+      docker[fn](req.body)
+        .then(data => res.json(data))
+        .catch(error => res.status(500).send({ error }));
+    });
+  }
+  let containerFns = [
+    "inspect",
+    "rename",
+    "update",
+    "top",
+    "changes",
+    "listCheckpoint",
+    "deleteCheckpoint",
+    "createCheckpoint",
+    "export",
+    "start",
+    "pause",
+    "unpause",
+    "exec",
+    "commit",
+    "stop",
+    "restart",
+    "kill",
+    "resize",
+    "attach",
+    "wait",
+    "remove",
+    "copy",
+    "getArchive",
+    "infoArchive",
+    "putArchive",
+    "logs",
+    "stats"
+  ];
+  for (let fn of containerFns) {
+    app.post(`/api/v1/containers/:id/${fn}`, (req, res) => {
+      docker
+        .getContainer(req.params.id)
+        [fn](req.body)
+        .then(data => res.json(data))
+        .catch(error => res.status(500).send({ error }));
+    });
+  }
+  let imageFns = ["start", "stop", "remove", "inspect", "rename"];
+  for (let fn of imageFns) {
+    app.post(`/api/v1/images/:id/${fn}`, (req, res) => {
+      docker
+        .getContainer(req.params.id)
+        [fn](req.body)
+        .then(data => res.json(data))
+        .catch(error => res.status(500).send({ error }));
+    });
+  }
+  //
   // Start the Server
   //
   let server = require("http").Server(app);
