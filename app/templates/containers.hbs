@@ -1,5 +1,12 @@
- {{#each model as |container|}}
-<p>{{container.Image}} {{container.Names}}</p>
-{{/each}}
-<p>Listed {{model.length}} container(s).</p>
+<div class="mdl-grid">
+    {{#each model as |container|}}
+    <div class="mdl-cell mdl-cell--12-col">
+        {{#mdl-card title=container.Names}}
+        <div class="mdl-card__supporting-text">
+            <p>Image: {{container.Image}}</p>
+        </div>
+        {{#mdl-card-actions}} {{mdl-button text='Stop'}} {{/mdl-card-actions}} {{#mdl-card-buttons}} {{mdl-button icon='...'}} {{/mdl-card-buttons}}
+        {{/mdl-card}} </div>{{/each}}
+    <p>Listed {{model.length}} container(s).</p>
+</div>
 {{outlet}}

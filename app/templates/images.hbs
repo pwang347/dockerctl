@@ -1,5 +1,13 @@
- {{#each model as |image|}}
-<p>{{image.RepoTags}}</p>
-{{/each}}
-<p>Listed {{model.length}} image(s).</p>
+<div class="mdl-grid">
+    {{#each model as |image|}}
+    <div class="mdl-cell mdl-cell--12-col">
+        {{#mdl-card title=image.RepoTags}}
+        <div class="mdl-card__supporting-text">
+            <p>Some description.</p>
+        </div>
+        {{#mdl-card-actions}} {{mdl-button text='Run'}} {{/mdl-card-actions}} {{#mdl-card-buttons}} {{mdl-button icon='...'}} {{/mdl-card-buttons}}
+        {{/mdl-card}}
+    </div> {{/each}}
+    <p>Listed {{model.length}} image(s).</p>
+</div>
 {{outlet}}
